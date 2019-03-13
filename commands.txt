@@ -1,0 +1,3 @@
+antlr4 -visitor -no-listener bc.g4 
+javac *.java
+java Main

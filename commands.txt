@@ -1,3 +1,4 @@
-antlr4 -visitor -no-listener bc.g4 
+antlr4 -visitor -no-listener BC.g4 
 javac *.java
 java Main
+antlr4 -visitor -no-listener BC.g4; javac *.java; java Main;

@@ -4,8 +4,7 @@ program: (line';'?)+;
 
 
 line:
-    IF expr
-    | expr //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
+    expr //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
     | shorthand //{ System.out.println("result: "+ Double.toString($shorthand.val)); } 
     | equation  
     | PRINT print //{ System.out.println(); }
@@ -15,40 +14,40 @@ line:
 ;
 
 expr returns [Double val]: 
-    MINUS expr //{ $val = $expr.val * -1; }
-    | OPAREN expr CPAREN //{$val = $expr.val;}
-    | el=expr op=POW er=expr //{ $val= Math.pow($el.val,$er.val);}
-    | el=expr op=(MULT|DIV) er=expr 
+    MINUS expr #negate //{ $val = $expr.val * -1; } 
+    | OPAREN expr CPAREN #parens //{$val = $expr.val;}
+    | el=expr op=POW er=expr  #power //{ $val= Math.pow($el.val,$er.val);}
+    | el=expr op=(MULT|DIV) er=expr #multdiv 
     // { if($op.text.equals("*")){$val=$el.val*$er.val;} 
     //     else { if($er.val != 0){$val=$el.val/$er.val;}
     //             else{$val=Double.NaN; System.out.println("Runtime error: Divide by zero");}
     //         } }
-    | el=expr op=(PLUS|MINUS) er=expr
+    | el=expr op=(PLUS|MINUS) er=expr #plusmin
     //{ if($op.text.equals("+")){$val=$el.val+$er.val;} else {$val=$el.val-$er.val;} }
 
-    | DOUBLE //{ $val=Double.parseDouble($DOUBLE.text); }
-    | ID //{ $val=hmap.getOrDefault($ID.text, 0.0);}
+    | DOUBLE  #double //{ $val=Double.parseDouble($DOUBLE.text); } 
+    | ID #id //{ $val=hmap.getOrDefault($ID.text, 0.0);}
 
-    | NOT expr //{ if($expr.val == 0.0){$val = 1.0;} else {$val = 0.0;} }
+    | NOT expr #not//{ if($expr.val == 0.0){$val = 1.0;} else {$val = 0.0;} }
 
-    | el=expr op=AND er=expr
+    | el=expr op=AND er=expr #and
     //{ if($el.val != 0.0 && $er.val != 0.0){$val = 1.0;} else{$val = 0.0;} } 
 
-    | el=expr op=OR er=expr
+    | el=expr op=OR er=expr #or
     //{ if($el.val != 0.0 || $er.val != 0.0){$val = 1.0;} else{$val = 0.0;} }
 
-    | SQRT expr ')' 
+    | SQRT expr CPAREN #sqrt
     // { if($expr.val < 0){$val = Double.NaN; 
     //     System.out.println("Runtime error: Square root of a negative number"); }
     //     else{$val = Math.sqrt($expr.val);} }
 
-    | SIN expr ')' //{ $val = Math.sin($expr.val); }
-    | COS expr ')' //{ $val = Math.cos($expr.val); }
-    | LOG expr ')' //{ $val = Math.log($expr.val); } 
-    | EXP expr ')' //{ $val = Math.exp($expr.val); }
+    | SIN expr CPAREN #sin //{ $val = Math.sin($expr.val); }
+    | COS expr CPAREN #cos //{ $val = Math.cos($expr.val); }
+    | LOG expr CPAREN #log //{ $val = Math.log($expr.val); } 
+    | EXP expr CPAREN #exp //{ $val = Math.exp($expr.val); }
     
 
-    | READ //{ $val = scnr.nextDouble(); }
+    | READ #read //{ $val = scnr.nextDouble(); }
     ;
 
 shorthand returns [Double val]:

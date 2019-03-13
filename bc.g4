@@ -1,4 +1,4 @@
-grammar bc;
+grammar BC;
 
 program: (line';'?)+;
 

@@ -1,4 +1,5 @@
-bcLexer*
-bcParser.java
+BCLexer*
 bc.interp
 bc.tokens
+*.class
+BCParser*

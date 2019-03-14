@@ -29,26 +29,12 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParens(BCParser.ParensContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code read}
+	 * Visit a parse tree produced by the {@code sinExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRead(BCParser.ReadContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code or}
-	 * labeled alternative in {@link BCParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOr(BCParser.OrContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code log}
-	 * labeled alternative in {@link BCParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLog(BCParser.LogContext ctx);
+	T visitSinExpr(BCParser.SinExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code double}
 	 * labeled alternative in {@link BCParser#expr}.
@@ -57,82 +43,96 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDouble(BCParser.DoubleContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code cos}
+	 * Visit a parse tree produced by the {@code sqrtExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCos(BCParser.CosContext ctx);
+	T visitSqrtExpr(BCParser.SqrtExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code not}
+	 * Visit a parse tree produced by the {@code readExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNot(BCParser.NotContext ctx);
+	T visitReadExpr(BCParser.ReadExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code plusmin}
+	 * Visit a parse tree produced by the {@code orExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPlusmin(BCParser.PlusminContext ctx);
+	T visitOrExpr(BCParser.OrExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code sqrt}
+	 * Visit a parse tree produced by the {@code multExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSqrt(BCParser.SqrtContext ctx);
+	T visitMultExpr(BCParser.MultExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code negate}
+	 * Visit a parse tree produced by the {@code logExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNegate(BCParser.NegateContext ctx);
+	T visitLogExpr(BCParser.LogExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code and}
+	 * Visit a parse tree produced by the {@code negateExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAnd(BCParser.AndContext ctx);
+	T visitNegateExpr(BCParser.NegateExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code multdiv}
+	 * Visit a parse tree produced by the {@code notExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMultdiv(BCParser.MultdivContext ctx);
+	T visitNotExpr(BCParser.NotExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code sin}
+	 * Visit a parse tree produced by the {@code cosExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSin(BCParser.SinContext ctx);
+	T visitCosExpr(BCParser.CosExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code id}
+	 * Visit a parse tree produced by the {@code expExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitId(BCParser.IdContext ctx);
+	T visitExpExpr(BCParser.ExpExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code power}
+	 * Visit a parse tree produced by the {@code addExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPower(BCParser.PowerContext ctx);
+	T visitAddExpr(BCParser.AddExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code exp}
+	 * Visit a parse tree produced by the {@code powExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExp(BCParser.ExpContext ctx);
+	T visitPowExpr(BCParser.PowExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code idExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdExpr(BCParser.IdExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code andExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndExpr(BCParser.AndExprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BCParser#shorthand}.
 	 * @param ctx the parse tree

@@ -78,6 +78,24 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInlineCheck(BCParser.InlineCheckContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BCParser#methodDef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodDef(BCParser.MethodDefContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link BCParser#methodCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodCall(BCParser.MethodCallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link BCParser#methodArgs}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodArgs(BCParser.MethodArgsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link BCParser#whilestate}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -102,6 +120,13 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParens(BCParser.ParensContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code greaterEqExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGreaterEqExpr(BCParser.GreaterEqExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code sinExpr}
 	 * labeled alternative in {@link BCParser#expr}.
@@ -131,12 +156,26 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReadExpr(BCParser.ReadExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code lessExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLessExpr(BCParser.LessExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code orExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitOrExpr(BCParser.OrExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code notequalExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotequalExpr(BCParser.NotequalExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code multExpr}
 	 * labeled alternative in {@link BCParser#expr}.
@@ -158,6 +197,13 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNegateExpr(BCParser.NegateExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code greaterExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGreaterExpr(BCParser.GreaterExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code notExpr}
 	 * labeled alternative in {@link BCParser#expr}.
@@ -194,12 +240,26 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPowExpr(BCParser.PowExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code lessEqExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLessEqExpr(BCParser.LessEqExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code idExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitIdExpr(BCParser.IdExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code equalExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqualExpr(BCParser.EqualExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code andExpr}
 	 * labeled alternative in {@link BCParser#expr}.

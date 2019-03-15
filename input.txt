@@ -1,2 +1,5 @@
-if(!x)
-x++
+define add(x ,y){
+    
+
+
+}

@@ -6,15 +6,29 @@ program: block EOF;
 block: statement*;
 
 statement:
-    ifstate 
-    | whilestate
-    | expr //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
-    | shorthand //{ System.out.println("result: "+ Double.toString($shorthand.val)); } 
-    | equation  
-    | PRINT print //{ System.out.println(); }
-    
-    | COMMENT
-    | INLINE_COMMENT
+                    
+    ifstate             #ifCheck
+    | whilestate        #whileCheck
+    | expr              #exprPrint //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
+    | shorthand         #shorthandCheck//{ System.out.println("result: "+ Double.toString($shorthand.val)); } 
+    | equation          #equationCheck
+    | PRINT print       #printCheck //{ System.out.println(); }
+
+    | COMMENT           #commentCheck
+    | INLINE_COMMENT    #inlineCheck
+;
+
+methodDef:
+    FUNCTION ID OPAREN methodArgs CPAREN actions
+;
+
+methodCall:
+    ID OPAREN methodArgs CPAREN
+;
+
+methodArgs:
+    //optional arguments
+    | expr (',' expr)*
 ;
 
 whilestate: 
@@ -22,7 +36,11 @@ whilestate:
 ;
 
 ifstate:
-    IF expr actions (ELSE IF expr actions)* (ELSE actions)?
+    IF OPAREN expr CPAREN actions (ELSE IF OPAREN expr CPAREN actions)* (ELSE actions)?
+;
+
+forstate:
+    FOR equation SEMIC expr SEMIC
 ;
 
 expr: 
@@ -118,12 +136,14 @@ ELSE: 'else';
 WHILE: 'while';
 FOR: 'for';
 FUNCTION: 'define';
+RETURN: 'return';
 
 //Characters
 OPAREN: '(';
 CPAREN: ')';
 OBRACE: '{';
 CBRACE: '}';
+SEMIC: ';';
 
 
 //NEWLINE:'\r'? '\n';

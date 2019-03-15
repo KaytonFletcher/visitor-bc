@@ -18,6 +18,14 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         return Double.parseDouble(ctx.DOUBLE().getText());
     }
 
+    //prints expressions that are standalone
+    @Override
+    public Double visitExprPrint(BCParser.ExprPrintContext ctx) {
+        Double val = this.visit(ctx.expr());
+        System.out.println(val);
+        return val;
+    }
+
     @Override
     public Double visitIdExpr(BCParser.IdExprContext ctx) {
         String id = ctx.ID().getText();
@@ -148,7 +156,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -164,8 +171,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = 0.0;
         }
-
-        System.out.println(val);
         return val;
     }
 
@@ -181,8 +186,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = 0.0;
         }
-
-        System.out.println(val);
         return val;
     }
 
@@ -195,36 +198,30 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = Math.sqrt(expr);
         }
-
-        System.out.println(val);
         return val;
     }
 
     @Override
     public Double visitSinExpr(BCParser.SinExprContext ctx) {
         Double val = Math.sin(this.visit(ctx.expr()));
-        System.out.println(val);
         return val;
     }
 
     @Override
     public Double visitCosExpr(BCParser.CosExprContext ctx) {
         Double val = Math.cos(this.visit(ctx.expr()));
-        System.out.println(val);
         return val;
     }
 
     @Override
     public Double visitLogExpr(BCParser.LogExprContext ctx) {
         Double val = Math.log(this.visit(ctx.expr()));
-        System.out.println(val);
         return val;
     }
 
     @Override
     public Double visitExpExpr(BCParser.ExpExprContext ctx) {
         Double val = Math.exp(this.visit(ctx.expr()));
-        System.out.println(val);
         return val;
     }
 
@@ -233,7 +230,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         Scanner scnr = new Scanner(System.in);
 
         Double val = scnr.nextDouble();
-        System.out.println(val);
         return val;
     }
 
@@ -242,5 +238,33 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         Double val = -1 * this.visit(ctx.expr());
         return val;
     }
+
+    @Override
+    public Double visitIfstate(BCParser.IfstateContext ctx) {
+
+        List<BCParser.ExprContext> conditions =  ctx.expr();
+        
+        boolean visited = false;
+        int i=0; 
+        for(i=0; i< conditions.size(); i++){
+            
+            Double val = this.visit(conditions.get(i));
+
+            if(val > 0){
+                Double yeet = this.visit(ctx.actions(i));
+                visited = true;
+                break;
+            }   
+        }
+
+        //last action for else statement (doesn't have a condition)
+        if(ctx.actions(++i) != null && !visited){
+            this.visit(ctx.actions(i));
+        }
+        return Double.NaN;
+    }
+    
+
+
 
 }

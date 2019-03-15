@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.Scanner;
 
 
 public class EvalVisitor extends BCBaseVisitor<Double> {
@@ -88,7 +89,7 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
 
     @Override
     public Double visitPowExpr(BCParser.PowExprContext ctx) {
-        Double val = Math.pow(this.visit(ctx.expr(1)), this.visit(ctx.expr(2)));
+        Double val = Math.pow(this.visit(ctx.expr(0)), this.visit(ctx.expr(1)));
         System.out.println(val);
         return val;
     }
@@ -134,4 +135,112 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         
         }
     } 
+
+    @Override
+    public Double visitNotExpr(BCParser.NotExprContext ctx) {
+        Double toNegate = this.visit(ctx.expr());
+        Double val;
+
+        if(toNegate == 0.0){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitAndExpr(BCParser.AndExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(left != 0.0 && right != 0.0){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitOrExpr(BCParser.OrExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(left != 0.0 || right != 0.0){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitSqrtExpr(BCParser.SqrtExprContext ctx) {
+        Double expr = this.visit(ctx.expr());
+        Double val;
+        
+        if(expr < 0){ throw new RuntimeException("Square root of negative number error!");}
+        else{
+            val = Math.sqrt(expr);
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitSinExpr(BCParser.SinExprContext ctx) {
+        Double val = Math.sin(this.visit(ctx.expr()));
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitCosExpr(BCParser.CosExprContext ctx) {
+        Double val = Math.cos(this.visit(ctx.expr()));
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitLogExpr(BCParser.LogExprContext ctx) {
+        Double val = Math.log(this.visit(ctx.expr()));
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitExpExpr(BCParser.ExpExprContext ctx) {
+        Double val = Math.exp(this.visit(ctx.expr()));
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitReadExpr(BCParser.ReadExprContext ctx) {
+        Scanner scnr = new Scanner(System.in);
+
+        Double val = scnr.nextDouble();
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitNegateExpr(BCParser.NegateExprContext ctx) {
+        Double val = -1 * this.visit(ctx.expr());
+        return val;
+    }
+
 }

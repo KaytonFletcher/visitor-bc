@@ -36,19 +36,19 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSinExpr(BCParser.SinExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code double}
-	 * labeled alternative in {@link BCParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDouble(BCParser.DoubleContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code sqrtExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitSqrtExpr(BCParser.SqrtExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code double}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDouble(BCParser.DoubleContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code readExpr}
 	 * labeled alternative in {@link BCParser#expr}.
@@ -151,4 +151,16 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPrint(BCParser.PrintContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link BCParser#ifstate}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfstate(BCParser.IfstateContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link BCParser#actions}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitActions(BCParser.ActionsContext ctx);
 }

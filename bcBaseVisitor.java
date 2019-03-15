@@ -44,14 +44,14 @@ public class BCBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements BCV
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDouble(BCParser.DoubleContext ctx) { return visitChildren(ctx); }
+	@Override public T visitSqrtExpr(BCParser.SqrtExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSqrtExpr(BCParser.SqrtExprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitDouble(BCParser.DoubleContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -157,4 +157,18 @@ public class BCBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements BCV
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitPrint(BCParser.PrintContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIfstate(BCParser.IfstateContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitActions(BCParser.ActionsContext ctx) { return visitChildren(ctx); }
 }

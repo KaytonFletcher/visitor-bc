@@ -1,5 +1,5 @@
 import java.lang.Exception;
-import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -13,9 +13,9 @@ public class Main {
 
         System.out.println("parsing: " + args[0]);
 
-        BCLexer lexer = new BCLexer(CharStreams.fromFileName(args[0]));
-        BCParser parser = new BCParser(new CommonTokenStream(lexer));
-        ParseTree tree = parser.program();
+        MuLexer lexer = new MuLexer(new ANTLRFileStream(args[0]));
+        MuParser parser = new MuParser(new CommonTokenStream(lexer));
+        ParseTree tree = parser.parse();
         EvalVisitor visitor = new EvalVisitor();
         visitor.visit(tree);
     }

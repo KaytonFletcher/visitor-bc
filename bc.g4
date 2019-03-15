@@ -31,6 +31,13 @@ expr:
     | el=expr op=POW er=expr            #powExpr
     | el=expr op=(MULT|DIV) er=expr     #multExpr
     | el=expr op=(PLUS|MINUS) er=expr   #addExpr
+
+    | el=expr op=LTHAN er=expr          #lessExpr
+    | el=expr op=LTHANEQ er=expr        #lessEqExpr
+    | el=expr op=GTHAN er=expr          #greaterExpr
+    | el=expr op=GTHANEQ er=expr        #greaterEqExpr
+    | el=expr op=EQUAL er=expr          #equalExpr
+    | el=expr op=NOTEQUAL er=expr       #notequalExpr
     
     | NOT expr                          #notExpr
     | el=expr op=AND er=expr            #andExpr
@@ -102,6 +109,13 @@ POWEQ: '^=';
 PP: '++';
 MM: '--';
 
+//Relational
+LTHAN: '<';
+LTHANEQ: '<=';
+GTHAN: '>';
+GTHANEQ: '>=';
+EQUAL: '==';
+NOTEQUAL: '!=';
 
 //Boolean
 NOT: '!';

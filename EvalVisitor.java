@@ -243,4 +243,105 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         return val;
     }
 
+    @Override
+    public Double visitLessExpr(BCParser.LessExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(left < right){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitGreaterExpr(BCParser.GreaterExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(left > right){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitEqualExpr(BCParser.EqualExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(left.equals(right)){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitLessEqExpr(BCParser.LessEqExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(left <= right){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitGreaterEqExpr(BCParser.GreaterEqExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(left >= right){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitNotequalExpr(BCParser.NotequalExprContext ctx) {
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+        Double val;
+
+        if(!left.equals(right)){
+            val = 1.0;
+        }
+        else{
+            val = 0.0;
+        }
+
+        System.out.println(val);
+        return val;
+    }
 }

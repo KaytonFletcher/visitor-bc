@@ -367,6 +367,24 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     }
 
     @Override
+    public Double visitWhilestate(BCParser.WhilestateContext ctx) {
+        Double val = this.visit(ctx.expr());
+
+        while(val > 0){
+            this.visit(ctx.actions());
+            val = this.visit(ctx.expr());
+        }
+
+        return Double.NaN;
+    }
+
+    // @Override
+    // public Double visitForstate(BCParser.ForstateContext ctx) {
+
+    // }
+
+
+    @Override
     public Double visitMethodCall(BCParser.MethodCallContext ctx) {
     
         if(functions.containsKey(ctx.ID().getText())){

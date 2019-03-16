@@ -1,5 +1,8 @@
 BCLexer*
-bc.interp
-bc.tokens
+BC.interp
+BC.tokens
 *.class
 BCParser*
+.antlr
+BCBaseVisitor.java
+BCVisitor.java

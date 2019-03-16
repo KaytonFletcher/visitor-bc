@@ -9,6 +9,7 @@ statement:
                     
     ifstate             #ifCheck
     | whilestate        #whileCheck
+    | forstate          #forCheck
     | expr              #exprPrint //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
     | shorthand         #shorthandCheck//{ System.out.println("result: "+ Double.toString($shorthand.val)); } 
     | equation          #equationCheck
@@ -40,7 +41,7 @@ ifstate:
 ;
 
 forstate:
-    FOR equation SEMIC expr SEMIC
+    FOR OPAREN equation SEMIC expr SEMIC shorthand CPAREN actions
 ;
 
 expr: 

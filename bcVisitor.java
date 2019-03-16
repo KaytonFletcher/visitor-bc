@@ -22,6 +22,20 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlock(BCParser.BlockContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code defineCheck}
+	 * labeled alternative in {@link BCParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDefineCheck(BCParser.DefineCheckContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code returnCheck}
+	 * labeled alternative in {@link BCParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnCheck(BCParser.ReturnCheckContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ifCheck}
 	 * labeled alternative in {@link BCParser#statement}.
 	 * @param ctx the parse tree
@@ -35,13 +49,6 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWhileCheck(BCParser.WhileCheckContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code exprPrint}
-	 * labeled alternative in {@link BCParser#statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprPrint(BCParser.ExprPrintContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code shorthandCheck}
 	 * labeled alternative in {@link BCParser#statement}.
@@ -63,6 +70,13 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPrintCheck(BCParser.PrintCheckContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exprPrint}
+	 * labeled alternative in {@link BCParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprPrint(BCParser.ExprPrintContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code commentCheck}
 	 * labeled alternative in {@link BCParser#statement}.
@@ -90,11 +104,17 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethodCall(BCParser.MethodCallContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link BCParser#methodArgs}.
+	 * Visit a parse tree produced by {@link BCParser#methodDefArgs}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMethodArgs(BCParser.MethodArgsContext ctx);
+	T visitMethodDefArgs(BCParser.MethodDefArgsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link BCParser#methodCallArgs}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodCallArgs(BCParser.MethodCallArgsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BCParser#whilestate}.
 	 * @param ctx the parse tree
@@ -233,6 +253,13 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAddExpr(BCParser.AddExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code callExpr}
+	 * labeled alternative in {@link BCParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallExpr(BCParser.CallExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code powExpr}
 	 * labeled alternative in {@link BCParser#expr}.
 	 * @param ctx the parse tree
@@ -267,6 +294,12 @@ public interface BCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAndExpr(BCParser.AndExprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link BCParser#functionblock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionblock(BCParser.FunctionblockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BCParser#actions}.
 	 * @param ctx the parse tree

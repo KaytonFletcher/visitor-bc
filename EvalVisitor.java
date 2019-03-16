@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import javax.management.RuntimeErrorException;
 import java.util.Scanner;
 
 
 public class EvalVisitor extends BCBaseVisitor<Double> {
+    private HashMap<String, BCParser.MethodDefContext> functions = new HashMap<String, BCParser.MethodDefContext>();
     
     private HashMap<String, Double> globalVars = new HashMap<String, Double>();
     private Stack<HashMap<String, Double>> stack  = new Stack<HashMap<String, Double>>();
@@ -22,7 +24,8 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     @Override
     public Double visitExprPrint(BCParser.ExprPrintContext ctx) {
         Double val = this.visit(ctx.expr());
-        System.out.println(val);
+        System.out.println("Expression: " + ctx.expr().getText());
+        System.out.println("Proper print: " + val);
         return val;
     }
 
@@ -36,7 +39,9 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     @Override
     public Double visitEquation(BCParser.EquationContext ctx) {
         String id = ctx.ID().getText();
+
         Double value = this.visit(ctx.expr());
+    
 
         
         //if stack is empty we are in global scope, so will add to global hashmap
@@ -76,13 +81,11 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
                 val = memory.put(id, memory.getOrDefault(id ,0.0) + 1);
                 //post increment check
                 if(id.equals(ctx.getChild(0))){val--;}
-                System.out.println(val);
                 return val;
             case BCParser.MM: 
                 val = memory.put(id, memory.getOrDefault(id ,0.0) - 1);
                 //post decrement check
                 if(id.equals(ctx.getChild(0))){val++;}
-                System.out.println(val);
                 return val;
             default: throw new RuntimeException("Bad Assignment"); 
         }
@@ -98,7 +101,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     @Override
     public Double visitPowExpr(BCParser.PowExprContext ctx) {
         Double val = Math.pow(this.visit(ctx.expr(0)), this.visit(ctx.expr(1)));
-        System.out.println(val);
         return val;
     }
 
@@ -111,11 +113,9 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         switch (ctx.op.getType()) {
             case BCParser.PLUS:
                 val = left + right;
-                System.out.println(val);
                 return val;
             case BCParser.MINUS:
                 val = left - right;
-                System.out.println(val);
                 return val;
             default:
                 throw new RuntimeException("unknown operator");
@@ -131,12 +131,10 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         switch (ctx.op.getType()) {
             case BCParser.MULT:
                 val = left * right;
-                System.out.println(val);
                 return val;
             case BCParser.DIV:
                 if(right == 0.0){ throw new RuntimeException("Divide by zero error!"); }
                 val = left / right;
-                System.out.println(val);
                 return val;
             default:
                 throw new RuntimeException("unknown operator");
@@ -253,7 +251,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -269,8 +266,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = 0.0;
         }
-
-        System.out.println(val);
         return val;
     }
 
@@ -286,8 +281,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = 0.0;
         }
-
-        System.out.println(val);
         return val;
     }
 
@@ -303,8 +296,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = 0.0;
         }
-
-        System.out.println(val);
         return val;
     }
 
@@ -320,8 +311,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = 0.0;
         }
-
-        System.out.println(val);
         return val;
     }
 
@@ -337,8 +326,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         else{
             val = 0.0;
         }
-
-        System.out.println(val);
         return val;
     }
 
@@ -346,15 +333,18 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     public Double visitIfstate(BCParser.IfstateContext ctx) {
 
         List<BCParser.ExprContext> conditions =  ctx.expr();
-        
-        boolean visited = false;
+ 
         int i=0; 
+        Double returnVal = 0.0;
+        boolean visited = false;
+        //for if and each else if branch
         for(i=0; i< conditions.size(); i++){
             
             Double val = this.visit(conditions.get(i));
 
+            //condition evaluated to true, perform statements within
             if(val > 0){
-                Double yeet = this.visit(ctx.actions(i));
+                returnVal = this.visit(ctx.actions(i));
                 visited = true;
                 break;
             }   
@@ -362,14 +352,74 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
 
         //last action for else statement (doesn't have a condition)
         if(ctx.actions(++i) != null && !visited){
-            this.visit(ctx.actions(i));
+            returnVal = this.visit(ctx.actions(i));
         }
+        return returnVal;
+    }
+
+    @Override
+    public Double visitMethodDef(BCParser.MethodDefContext ctx) {
+        String functionName = ctx.ID().getText();
+        if(functions.containsKey(functionName)) { throw new RuntimeException("Function re-definition error"); }
+
+        functions.put(functionName, ctx);
         return Double.NaN;
     }
 
-
+    @Override
+    public Double visitMethodCall(BCParser.MethodCallContext ctx) {
     
+        if(functions.containsKey(ctx.ID().getText())){
 
+            BCParser.MethodDefContext methodDef =  functions.get(ctx.ID().getText());
+            BCParser.MethodDefArgsContext definedArgs = methodDef.methodDefArgs();
+            List<BCParser.ExprContext> calledArgs = ctx.methodCallArgs().expr();
 
+            //wrong param number
+            if(definedArgs.ID().size() != calledArgs.size()){throw new RuntimeException("Incorrect number of parameters"); }
+            
+            HashMap<String, Double> Scope = new HashMap<String, Double>();
+            int numArguments = definedArgs.ID().size();
 
+            //puts arguments on to new scope
+            for(int i=0; i<numArguments;i++){ 
+                Scope.put(definedArgs.ID(i).getText(), this.visit(calledArgs.get(i)));
+            }
+            //add scope for function
+            stack.push(Scope);
+
+            int stackSize = stack.size();
+
+            //list of statements for function to run
+            List<BCParser.StatementContext> functionStatements = methodDef.functionblock().block().statement();
+        
+            for(BCParser.StatementContext functionState : functionStatements) {
+                
+                //visit each statement
+                Double val = this.visit(functionState);
+                
+                //return statement was called -> popping the stack
+                if(stackSize != stack.size()) { 
+                    return val; }
+            }
+
+            //if no return statement, escape scope and return 0
+            stack.pop();
+            return 0.0;
+        } else {
+            throw new RuntimeException("Function definition not found");
+        }
+    }
+    
+    @Override
+    public Double visitReturnCheck(BCParser.ReturnCheckContext ctx) {
+        if(stack.isEmpty()) { throw new RuntimeException("return outside function");}
+
+        //preserve value to be returned
+        Double val = this.visit(ctx.expr());
+
+        //leave scope
+        stack.pop();
+        return val;
+    }
 }

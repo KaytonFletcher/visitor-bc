@@ -6,28 +6,33 @@ program: block EOF;
 block: statement*;
 
 statement:
-                    
-    ifstate             #ifCheck
+    methodDef           #defineCheck
+    | RETURN expr       #returnCheck                
+    | ifstate           #ifCheck
     | whilestate        #whileCheck
-    | expr              #exprPrint //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
-    | shorthand         #shorthandCheck//{ System.out.println("result: "+ Double.toString($shorthand.val)); } 
+    | shorthand         #shorthandCheck
     | equation          #equationCheck
-    | PRINT print       #printCheck //{ System.out.println(); }
+    | PRINT print       #printCheck
 
+    | expr              #exprPrint 
     | COMMENT           #commentCheck
     | INLINE_COMMENT    #inlineCheck
 ;
 
 methodDef:
-    FUNCTION ID OPAREN methodArgs CPAREN actions
+    FUNCTION ID OPAREN methodDefArgs CPAREN functionblock
 ;
 
 methodCall:
-    ID OPAREN methodArgs CPAREN
+    ID OPAREN methodCallArgs CPAREN
 ;
 
-methodArgs:
+methodDefArgs:
     //optional arguments
+    | ID (',' ID)*
+;
+
+methodCallArgs:
     | expr (',' expr)*
 ;
 
@@ -43,8 +48,9 @@ forstate:
     FOR equation SEMIC expr SEMIC
 ;
 
-expr: 
-    MINUS expr                          #negateExpr 
+expr:
+    methodCall                          #callExpr
+    | MINUS expr                        #negateExpr 
     | OPAREN expr CPAREN                #parens 
     | el=expr op=POW er=expr            #powExpr
     | el=expr op=(MULT|DIV) er=expr     #multExpr
@@ -72,6 +78,10 @@ expr:
     
     | DOUBLE                            #double 
     | ID                                #idExpr
+;
+
+functionblock:
+    OBRACE block CBRACE 
 ;
 
 actions:
@@ -144,13 +154,14 @@ OR: '||';
 READ: 'read()';
 PRINT: 'print';
 
-//Statements
+//Key words
 IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 FOR: 'for';
 FUNCTION: 'define';
 RETURN: 'return';
+
 
 //Characters
 OPAREN: '(';

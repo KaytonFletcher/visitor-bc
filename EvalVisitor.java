@@ -98,7 +98,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     @Override
     public Double visitPowExpr(BCParser.PowExprContext ctx) {
         Double val = Math.pow(this.visit(ctx.expr(0)), this.visit(ctx.expr(1)));
-        System.out.println(val);
         return val;
     }
 
@@ -111,11 +110,9 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         switch (ctx.op.getType()) {
             case BCParser.PLUS:
                 val = left + right;
-                System.out.println(val);
                 return val;
             case BCParser.MINUS:
                 val = left - right;
-                System.out.println(val);
                 return val;
             default:
                 throw new RuntimeException("unknown operator");
@@ -131,12 +128,10 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         switch (ctx.op.getType()) {
             case BCParser.MULT:
                 val = left * right;
-                System.out.println(val);
                 return val;
             case BCParser.DIV:
                 if(right == 0.0){ throw new RuntimeException("Divide by zero error!"); }
                 val = left / right;
-                System.out.println(val);
                 return val;
             default:
                 throw new RuntimeException("unknown operator");
@@ -253,7 +248,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -270,7 +264,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -287,7 +280,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -304,7 +296,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -321,7 +312,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -338,7 +328,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = 0.0;
         }
 
-        System.out.println(val);
         return val;
     }
 
@@ -366,6 +355,23 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         }
         return Double.NaN;
     }
+
+    @Override
+    public Double visitWhilestate(BCParser.WhilestateContext ctx) {
+        Double val = this.visit(ctx.expr());
+
+        while(val > 0){
+            this.visit(ctx.actions());
+            val = this.visit(ctx.expr());
+        }
+
+        return Double.NaN;
+    }
+
+    // @Override
+    // public Double visitForstate(BCParser.ForstateContext ctx) {
+
+    // }
 
 
     

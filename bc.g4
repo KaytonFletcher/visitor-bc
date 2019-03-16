@@ -10,6 +10,7 @@ statement:
     | RETURN expr       #returnCheck                
     | ifstate           #ifCheck
     | whilestate        #whileCheck
+
     | forstate          #forCheck
     | expr              #exprPrint //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
     | shorthand         #shorthandCheck//{ System.out.println("result: "+ Double.toString($shorthand.val)); } 
@@ -99,23 +100,19 @@ shorthand:
 ;
 
 equation:
-    ID op=ASSIGN expr //{ hmap.put($ID.text, $expr.val); }
-    | ID op=PLUSEQ expr //{ hmap.put($ID.text, hmap.getOrDefault($ID.text,0.0) + $expr.val); }
-    | ID op=MINUSEQ expr //{ hmap.put($ID.text, hmap.getOrDefault($ID.text,0.0) - $expr.val); }
-    | ID op=MULTEQ expr //{ hmap.put($ID.text, hmap.getOrDefault($ID.text,0.0) * $expr.val); }
-    | ID op=DIVEQ expr //{ hmap.put($ID.text, hmap.getOrDefault($ID.text,0.0) / $expr.val); }
-    | ID op=POWEQ expr //{ hmap.put($ID.text, Math.pow(hmap.getOrDefault($ID.text,0.0), $expr.val)); }
-    | ID op=ASSIGN READ  //{ double toAdd = scnr.nextDouble(); hmap.put($ID.text, toAdd); }
+    ID op=ASSIGN expr
+    | ID op=PLUSEQ expr 
+    | ID op=MINUSEQ expr
+    | ID op=MULTEQ expr 
+    | ID op=DIVEQ expr
+    | ID op=POWEQ expr 
+    | ID op=ASSIGN READ 
 ;
 
 print:
     '"'ID'"' //{System.out.print($ID.text); } (',' print)? 
     | expr //{System.out.print($expr.val); } (',' print)? 
 ;
-
-
-
-
 
 //Math operators/functions
 PLUS: '+';

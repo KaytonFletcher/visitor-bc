@@ -1,5 +1,6 @@
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,19 +15,19 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     private HashMap<String, Double> globalVars = new HashMap<String, Double>();
     private Stack<HashMap<String, Double>> stack  = new Stack<HashMap<String, Double>>();
 
-    //yields double value when it is encountered in parse tree
-    @Override
-    public Double visitDouble(BCParser.DoubleContext ctx) {
-        return Double.parseDouble(ctx.DOUBLE().getText());
-    }
-
-    //prints expressions that are standalone
-    @Override
+    @Override //prints expressions that are standalone
     public Double visitExprPrint(BCParser.ExprPrintContext ctx) {
         Double val = this.visit(ctx.expr());
-        System.out.println("Expression: " + ctx.expr().getText());
-        System.out.println("Proper print: " + val);
+        System.out.println(val);
         return val;
+    }
+
+    /**** ATOM EXPRESSIONS ****/
+    
+    @Override
+    public Double visitDouble(BCParser.DoubleContext ctx) {
+        //yields double value when it is encountered in parse tree
+        return Double.parseDouble(ctx.DOUBLE().getText());
     }
 
     @Override
@@ -36,6 +37,8 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         return memory.getOrDefault(id, 0.0);
     }
 
+    /**** EQUATION STATEMENTS ****/
+
     @Override
     public Double visitEquation(BCParser.EquationContext ctx) {
         String id = ctx.ID().getText();
@@ -43,7 +46,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         Double value = this.visit(ctx.expr());
     
 
-        
         //if stack is empty we are in global scope, so will add to global hashmap
         //performs shallow copy changing class variables
         HashMap<String, Double> memory = (stack.isEmpty()) ? globalVars : stack.peek();
@@ -91,7 +93,7 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         }
     }
 
-
+    /**** PEMDAS EXPRESSIONS ****/
 
     @Override
     public Double visitParens(BCParser.ParensContext ctx) {
@@ -102,24 +104,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     public Double visitPowExpr(BCParser.PowExprContext ctx) {
         Double val = Math.pow(this.visit(ctx.expr(0)), this.visit(ctx.expr(1)));
         return val;
-    }
-
-    @Override 
-    public Double visitAddExpr(BCParser.AddExprContext ctx) { 
-        Double left = this.visit(ctx.expr(0));
-        Double right = this.visit(ctx.expr(1));
-
-        Double val;
-        switch (ctx.op.getType()) {
-            case BCParser.PLUS:
-                val = left + right;
-                return val;
-            case BCParser.MINUS:
-                val = left - right;
-                return val;
-            default:
-                throw new RuntimeException("unknown operator");
-        }
     }
 
     @Override 
@@ -141,6 +125,27 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         
         }
     } 
+
+    @Override 
+    public Double visitAddExpr(BCParser.AddExprContext ctx) { 
+        Double left = this.visit(ctx.expr(0));
+        Double right = this.visit(ctx.expr(1));
+
+        Double val;
+        switch (ctx.op.getType()) {
+            case BCParser.PLUS:
+                val = left + right;
+                return val;
+            case BCParser.MINUS:
+                val = left - right;
+                return val;
+            default:
+                throw new RuntimeException("unknown operator");
+        }
+    }
+
+
+    /**** BOOLEAN AND RELATIONAL EXPRESSIONS ****/
 
     @Override
     public Double visitNotExpr(BCParser.NotExprContext ctx) {
@@ -186,57 +191,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         }
         return val;
     }
-
-    @Override
-    public Double visitSqrtExpr(BCParser.SqrtExprContext ctx) {
-        Double expr = this.visit(ctx.expr());
-        Double val;
-        
-        if(expr < 0){ throw new RuntimeException("Square root of negative number error!");}
-        else{
-            val = Math.sqrt(expr);
-        }
-        return val;
-    }
-
-    @Override
-    public Double visitSinExpr(BCParser.SinExprContext ctx) {
-        Double val = Math.sin(this.visit(ctx.expr()));
-        return val;
-    }
-
-    @Override
-    public Double visitCosExpr(BCParser.CosExprContext ctx) {
-        Double val = Math.cos(this.visit(ctx.expr()));
-        return val;
-    }
-
-    @Override
-    public Double visitLogExpr(BCParser.LogExprContext ctx) {
-        Double val = Math.log(this.visit(ctx.expr()));
-        return val;
-    }
-
-    @Override
-    public Double visitExpExpr(BCParser.ExpExprContext ctx) {
-        Double val = Math.exp(this.visit(ctx.expr()));
-        return val;
-    }
-
-    @Override
-    public Double visitReadExpr(BCParser.ReadExprContext ctx) {
-        Scanner scnr = new Scanner(System.in);
-
-        Double val = scnr.nextDouble();
-        return val;
-    }
-
-    @Override
-    public Double visitNegateExpr(BCParser.NegateExprContext ctx) {
-        Double val = -1 * this.visit(ctx.expr());
-        return val;
-    }
-
 
     @Override
     public Double visitLessExpr(BCParser.LessExprContext ctx) {
@@ -329,6 +283,61 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         return val;
     }
 
+
+    /**** MATH EXPRESSIONS ****/
+
+    @Override
+    public Double visitSqrtExpr(BCParser.SqrtExprContext ctx) {
+        Double expr = this.visit(ctx.expr());
+        Double val;
+        
+        if(expr < 0){ throw new RuntimeException("Square root of negative number error!");}
+        else{
+            val = Math.sqrt(expr);
+        }
+        return val;
+    }
+
+    @Override
+    public Double visitSinExpr(BCParser.SinExprContext ctx) {
+        Double val = Math.sin(this.visit(ctx.expr()));
+        return val;
+    }
+
+    @Override
+    public Double visitCosExpr(BCParser.CosExprContext ctx) {
+        Double val = Math.cos(this.visit(ctx.expr()));
+        return val;
+    }
+
+    @Override
+    public Double visitLogExpr(BCParser.LogExprContext ctx) {
+        Double val = Math.log(this.visit(ctx.expr()));
+        return val;
+    }
+
+    @Override
+    public Double visitExpExpr(BCParser.ExpExprContext ctx) {
+        Double val = Math.exp(this.visit(ctx.expr()));
+        return val;
+    }
+
+    @Override
+    public Double visitReadExpr(BCParser.ReadExprContext ctx) {
+        Scanner scnr = new Scanner(System.in);
+
+        Double val = scnr.nextDouble();
+        return val;
+    }
+
+    @Override
+    public Double visitNegateExpr(BCParser.NegateExprContext ctx) {
+        Double val = -1 * this.visit(ctx.expr());
+        return val;
+    }
+
+    /**** IF, WHILTE, FOR STATEMENTS ****/
+
     @Override
     public Double visitIfstate(BCParser.IfstateContext ctx) {
 
@@ -358,15 +367,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     }
 
     @Override
-    public Double visitMethodDef(BCParser.MethodDefContext ctx) {
-        String functionName = ctx.ID().getText();
-        if(functions.containsKey(functionName)) { throw new RuntimeException("Function re-definition error"); }
-
-        functions.put(functionName, ctx);
-        return Double.NaN;
-    }
-
-    @Override
     public Double visitWhilestate(BCParser.WhilestateContext ctx) {
         Double val = this.visit(ctx.expr());
 
@@ -383,6 +383,25 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
 
     // }
 
+    @Override
+    public Double visitActions(BCParser.ActionsContext ctx) {
+        List<BCParser.StatementContext> statements = (ctx.statement() == null) ? ctx.block().statement() : Arrays.asList(ctx.statement());
+        
+        Double val = 0.0;
+        for(BCParser.StatementContext statement : statements){ val = this.visit(statement); }
+        return val;
+    }
+
+    /**** FUNCTION STATEMENTS AND EXPRESSIONS ****/
+
+    @Override
+    public Double visitMethodDef(BCParser.MethodDefContext ctx) {
+        String functionName = ctx.ID().getText();
+        if(functions.containsKey(functionName)) { throw new RuntimeException("Function re-definition error"); }
+
+        functions.put(functionName, ctx);
+        return Double.NaN;
+    }
 
     @Override
     public Double visitMethodCall(BCParser.MethodCallContext ctx) {

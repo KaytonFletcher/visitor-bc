@@ -378,10 +378,20 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         return Double.NaN;
     }
 
-    // @Override
-    // public Double visitForstate(BCParser.ForstateContext ctx) {
+    @Override
+    public Double visitForstate(BCParser.ForstateContext ctx) {
+        
+        this.visit(ctx.equation());
+        Double val = this.visit(ctx.expr());
+        
+        while(val > 0){
+            this.visit(ctx.actions());
+            this.visit(ctx.shorthand());
+            val = this.visit(ctx.expr());
+        }
 
-    // }
+        return Double.NaN;
+    }
 
     @Override
     public Double visitActions(BCParser.ActionsContext ctx) {

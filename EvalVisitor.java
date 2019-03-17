@@ -22,6 +22,23 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         return val;
     }
 
+    @Override 
+    public Double visitShorthandPrint(BCParser.ShorthandPrintContext ctx) {
+        Double val = this.visit(ctx.shorthand());
+        System.out.println(val);
+        return val;
+    }
+
+    @Override
+    public Double visitPrint(BCParser.PrintContext ctx) {
+        if(ctx.ID() == null) {
+            System.out.println(this.visit(ctx.expr()));
+        } else {
+            System.out.println(ctx.ID().getText());
+        }
+        return Double.NaN;
+    }
+
     /**** ATOM EXPRESSIONS ****/
     
     @Override
@@ -358,9 +375,9 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
                 break;
             }   
         }
-
+        
         //last action for else statement (doesn't have a condition)
-        if(ctx.actions(++i) != null && !visited){
+        if(ctx.actions(i) != null && !visited){
             returnVal = this.visit(ctx.actions(i));
         }
         return returnVal;
@@ -368,26 +385,28 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
 
     @Override
     public Double visitWhilestate(BCParser.WhilestateContext ctx) {
-        Double val = this.visit(ctx.expr());
+        Double conditionVal = this.visit(ctx.expr());
+        Double check = 0.0;
 
-        while(val > 0){
-            this.visit(ctx.actions());
-            val = this.visit(ctx.expr());
+        while(conditionVal > 0 && !check.equals(Double.NaN)){
+            check = this.visit(ctx.actions());
+            conditionVal = this.visit(ctx.expr());
         }
 
-        return Double.NaN;
+        return check;
     }
 
     @Override
     public Double visitForstate(BCParser.ForstateContext ctx) {
         
         this.visit(ctx.equation());
-        Double val = this.visit(ctx.expr());
-        
-        while(val > 0){
-            this.visit(ctx.actions());
+        Double conditionVal = this.visit(ctx.expr());
+        Double breakCheck = 0.0;
+
+        while(conditionVal > 0 && !breakCheck.equals(Double.NaN)){
+            breakCheck = this.visit(ctx.actions());
             this.visit(ctx.shorthand());
-            val = this.visit(ctx.expr());
+            conditionVal = this.visit(ctx.expr());
         }
 
         return Double.NaN;
@@ -398,7 +417,14 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         List<BCParser.StatementContext> statements = (ctx.statement() == null) ? ctx.block().statement() : Arrays.asList(ctx.statement());
         
         Double val = 0.0;
-        for(BCParser.StatementContext statement : statements){ val = this.visit(statement); }
+        for(BCParser.StatementContext statement : statements) { 
+            val = this.visit(statement); 
+            if(statement.getClass().equals(BCParser.ReturnCheckContext.class) || statement.getClass().equals(BCParser.ContinueCheckContext.class))  
+            { return val; }
+            
+            if(statement.getClass().equals(BCParser.BreakCheckContext.class)) { return Double.NaN; }
+
+        }
         return val;
     }
 

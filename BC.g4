@@ -7,13 +7,16 @@ block: statement*;
 
 statement:
     methodDef           #defineCheck
-    | RETURN expr       #returnCheck                
+    | RETURN expr       #returnCheck
+    | BREAK             #breakCheck
+    | CONTINUE          #continueCheck                
+    
     | ifstate           #ifCheck
     | whilestate        #whileCheck
-
     | forstate          #forCheck
-    | expr              #exprPrint //{ if(!Double.isNaN($expr.val)){System.out.println("result: "+ Double.toString($expr.val));} } 
-    | shorthand         #shorthandCheck//{ System.out.println("result: "+ Double.toString($shorthand.val)); } 
+    
+    | expr              #exprPrint
+    | shorthand         #shorthandPrint
     | equation          #equationCheck
     | PRINT print       #printCheck
 
@@ -110,8 +113,8 @@ equation:
 ;
 
 print:
-    '"'ID'"' //{System.out.print($ID.text); } (',' print)? 
-    | expr //{System.out.print($expr.val); } (',' print)? 
+    '"'ID'"'  (',' print)? //{System.out.print($ID.text); }
+    | expr  (',' print)? //{System.out.print($expr.val); }
 ;
 
 //Math operators/functions
@@ -160,6 +163,8 @@ WHILE: 'while';
 FOR: 'for';
 FUNCTION: 'define';
 RETURN: 'return';
+BREAK: 'break';
+CONTINUE: 'continue';
 
 
 //Characters

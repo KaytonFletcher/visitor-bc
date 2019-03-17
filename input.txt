@@ -1,11 +1,11 @@
-define fib(n) {
-    if(n<=2) {
-    return 1
+for(i=0; i< 5; i++){
+    i
+    if(i > 2){
+        break
+    } else {
+        while(i < 6){
+            i++
+        }
     }
-
-    return fib(n-1) + fib(n-2)
-}
-
-y = fib(6)
-
-y
+    
+} 

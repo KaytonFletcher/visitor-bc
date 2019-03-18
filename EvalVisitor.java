@@ -15,17 +15,19 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     private HashMap<String, Double> globalVars = new HashMap<String, Double>();
     private Stack<HashMap<String, Double>> stack  = new Stack<HashMap<String, Double>>();
 
+
     @Override //prints expressions that are standalone
     public Double visitExprPrint(BCParser.ExprPrintContext ctx) {
         Double val = this.visit(ctx.expr());
-        System.out.println(val);
+        System.out.println("Expression Print " + val);
         return val;
     }
 
     @Override 
     public Double visitShorthandPrint(BCParser.ShorthandPrintContext ctx) {
         Double val = this.visit(ctx.shorthand());
-        System.out.println(val);
+        
+        System.out.println("shorthand print " + val);
         return val;
     }
 
@@ -51,7 +53,9 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     public Double visitIdExpr(BCParser.IdExprContext ctx) {
         String id = ctx.ID().getText();
         HashMap<String, Double> memory = (stack.isEmpty()) ? globalVars : stack.peek();
-        return memory.getOrDefault(id, 0.0);
+        Double val = memory.put(id, memory.getOrDefault(id, 0.0));
+        if(val == null ) { return 0.0; } else return val;
+      
     }
 
     /**** EQUATION STATEMENTS ****/
@@ -98,13 +102,18 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         switch (ctx.op.getType()) {
             case BCParser.PP:
                 val = memory.put(id, memory.getOrDefault(id ,0.0) + 1);
-                //post increment check
-                if(id.equals(ctx.getChild(0))){val--;}
+                if(val == null) { val = 0.0; }
+
+                //pre increment check
+                if(!id.equals(ctx.getChild(0).getText())){
+                    val++;}
                 return val;
             case BCParser.MM: 
                 val = memory.put(id, memory.getOrDefault(id ,0.0) - 1);
-                //post decrement check
-                if(id.equals(ctx.getChild(0))){val++;}
+                if(val == null) { val = 0.0; }
+
+                //pre decrement check
+                if(!id.equals(ctx.getChild(0).getText())){val--;}
                 return val;
             default: throw new RuntimeException("Bad Assignment"); 
         }
@@ -387,12 +396,14 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     public Double visitWhilestate(BCParser.WhilestateContext ctx) {
         Double conditionVal = this.visit(ctx.expr());
         Double check = 0.0;
-
-        while(conditionVal > 0 && !check.equals(Double.NaN)){
+    
+        while(conditionVal > 0){
             check = this.visit(ctx.actions());
             conditionVal = this.visit(ctx.expr());
-        }
 
+            if(check.equals(Double.NaN)) { return 0.0; } 
+
+        }
         return check;
     }
 
@@ -403,13 +414,19 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         Double conditionVal = this.visit(ctx.expr());
         Double breakCheck = 0.0;
 
-        while(conditionVal > 0 && !breakCheck.equals(Double.NaN)){
+        
+        while(conditionVal > 0){
             breakCheck = this.visit(ctx.actions());
             this.visit(ctx.shorthand());
             conditionVal = this.visit(ctx.expr());
+
+            if(breakCheck.equals(Double.NaN)) { return 0.0; }
+
+        //     System.out.println("condition check for: " + breakCheck);
+        // System.out.println("condition value for: " + conditionVal);
         }
 
-        return Double.NaN;
+        return breakCheck;
     }
 
     @Override

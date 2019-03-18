@@ -15,9 +15,9 @@ statement:
     | whilestate        #whileCheck
     | forstate          #forCheck
     
-    | expr              #exprPrint
     | shorthand         #shorthandPrint
     | equation          #equationCheck
+    | expr              #exprPrint
     | PRINT print       #printCheck
 
     | expr              #exprPrint 
@@ -43,7 +43,7 @@ methodCallArgs:
 ;
 
 whilestate: 
-    WHILE expr actions
+    WHILE OPAREN expr CPAREN actions
 ;
 
 ifstate:

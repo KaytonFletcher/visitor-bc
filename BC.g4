@@ -14,10 +14,8 @@ statement:
     | ifstate           #ifCheck
     | whilestate        #whileCheck
     | forstate          #forCheck
-    
-    | shorthand         #shorthandPrint
+
     | equation          #equationCheck
-    | expr              #exprPrint
     | PRINT print       #printCheck
 
     | expr              #exprPrint 
@@ -79,6 +77,7 @@ expr:
     | COS expr CPAREN                   #cosExpr
     | LOG expr CPAREN                   #logExpr 
     | EXP expr CPAREN                   #expExpr 
+    | shorthand                         #shorthandExpr
     
     | READ                              #readExpr
     

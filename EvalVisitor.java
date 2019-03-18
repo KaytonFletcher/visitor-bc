@@ -19,17 +19,17 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
     @Override //prints expressions that are standalone
     public Double visitExprPrint(BCParser.ExprPrintContext ctx) {
         Double val = this.visit(ctx.expr());
-        System.out.println("Expression Print " + val);
+        System.out.println(val);
         return val;
     }
 
-    @Override 
-    public Double visitShorthandPrint(BCParser.ShorthandPrintContext ctx) {
-        Double val = this.visit(ctx.shorthand());
+    // @Override 
+    // public Double visitShorthandPrint(BCParser.ShorthandPrintContext ctx) {
+    //     Double val = this.visit(ctx.shorthand());
         
-        System.out.println("shorthand print " + val);
-        return val;
-    }
+    //     System.out.println(val);
+    //     return val;
+    // }
 
     @Override
     public Double visitPrint(BCParser.PrintContext ctx) {
@@ -421,9 +421,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             conditionVal = this.visit(ctx.expr());
 
             if(breakCheck.equals(Double.NaN)) { return 0.0; }
-
-        //     System.out.println("condition check for: " + breakCheck);
-        // System.out.println("condition value for: " + conditionVal);
         }
 
         return breakCheck;

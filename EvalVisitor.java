@@ -410,7 +410,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             check = this.visit(ctx.actions());
             conditionVal = this.visit(ctx.expr());
             if(check.equals(Double.NaN)) { return 0.0; } 
-
         }
         return check;
     }
@@ -441,10 +440,14 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         Double val = 0.0;
         for(BCParser.StatementContext statement : statements) { 
             val = this.visit(statement); 
-            if(statement.getClass().equals(BCParser.ReturnCheckContext.class) || statement.getClass().equals(BCParser.ContinueCheckContext.class))  
+            if(statement.getClass().equals(BCParser.ReturnCheckContext.class))  
             { return val; }
+
+            if(statement.getClass().equals(BCParser.ContinueCheckContext.class)) { return Double.NEGATIVE_INFINITY; }
+
+
             if(val != null){
-                if( val.equals(Double.NaN)) { return val; }
+                if( val.equals(Double.NaN) || val.equals(Double.NEGATIVE_INFINITY)) { return val; }
             }
             
             

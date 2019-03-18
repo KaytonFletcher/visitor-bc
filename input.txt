@@ -1,8 +1,11 @@
 z=0
 while(z<6){
-   
+      z++
+      y
   if(z==3){
     break
-  }
-   z++
+  } else
+  continue
+
+    y++
 }

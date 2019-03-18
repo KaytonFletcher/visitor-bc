@@ -1,15 +1,8 @@
-define loop(x, y) {
-    for(i=0; i<3; i++)
-    {   
-        print "z value: " , z
-        if(z < 12)
-        z += (x*y)
-        else
-        continue
-
-    }
-
-    return z
+z=0
+while(z<6){
+   
+  if(z==3){
+    break
+  }
+   z++
 }
-
-a = loop(2,2)

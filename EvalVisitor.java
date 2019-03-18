@@ -23,14 +23,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         return val;
     }
 
-    // @Override 
-    // public Double visitShorthandPrint(BCParser.ShorthandPrintContext ctx) {
-    //     Double val = this.visit(ctx.shorthand());
-        
-    //     System.out.println(val);
-    //     return val;
-    // }
-
     @Override
     public Double visitPrint(BCParser.PrintContext ctx) {
         if(ctx.STRING() == null) {
@@ -396,6 +388,7 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             //condition evaluated to true, perform statements within
             if(val > 0){
                 returnVal = this.visit(ctx.actions(i));
+
                 visited = true;
                 break;
             }   
@@ -416,7 +409,6 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         while(conditionVal > 0){
             check = this.visit(ctx.actions());
             conditionVal = this.visit(ctx.expr());
-
             if(check.equals(Double.NaN)) { return 0.0; } 
 
         }
@@ -451,8 +443,13 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             val = this.visit(statement); 
             if(statement.getClass().equals(BCParser.ReturnCheckContext.class) || statement.getClass().equals(BCParser.ContinueCheckContext.class))  
             { return val; }
+            if(val != null){
+                if( val.equals(Double.NaN)) { return val; }
+            }
             
-            if(statement.getClass().equals(BCParser.BreakCheckContext.class)) { return Double.NaN; }
+            
+            if(statement.getClass().equals(BCParser.BreakCheckContext.class)) {
+                return Double.NaN; }
 
         }
         return val;

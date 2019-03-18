@@ -1,24 +1,15 @@
-define add(a, b, c) {
-    return a + b + c
-}
+define loop(x, y) {
+    for(i=0; i<3; i++)
+    {   
+        print "z value: " , z
+        if(z < 12)
+        z += (x*y)
+        else
+        continue
 
-
-define wildRide() {
-x=0
-
-for(i=0; i< 5; i++){
-    i
-    x
-    while(x < 4){
-        x++
-        if(x > 1) 
-        break
-        else print "yeet"
     }
-} 
-    return add(4, i, x)
+
+    return z
 }
 
-z = wildRide()
-
-z
+a = loop(2,2)

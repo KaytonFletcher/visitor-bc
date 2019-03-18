@@ -33,11 +33,24 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
 
     @Override
     public Double visitPrint(BCParser.PrintContext ctx) {
-        if(ctx.ID() == null) {
-            System.out.println(this.visit(ctx.expr()));
+        if(ctx.STRING() == null) {
+            System.out.print(this.visit(ctx.expr()));
         } else {
-            System.out.println(ctx.ID().getText());
+            String str = ctx.STRING().getText();
+            str = str.substring(1, str.length() - 1);
+            str = str.replaceAll("\\\\n", "\n");
+
+            System.out.print(str);
         }
+
+        if(ctx.print() != null ){ this.visit(ctx.print());}
+        return Double.NaN;
+    }
+
+    @Override
+    public Double visitPrintCheck(BCParser.PrintCheckContext ctx) {
+        this.visit(ctx.print());
+        System.out.println();
         return Double.NaN;
     }
 
@@ -71,19 +84,22 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         //performs shallow copy changing class variables
         HashMap<String, Double> memory = (stack.isEmpty()) ? globalVars : stack.peek();
         
+        //insures id exists in memory
+        memory.put(id, memory.getOrDefault(id,0.0));
+
         switch (ctx.op.getType()) {
             case BCParser.ASSIGN:
                 return memory.put(id, value);
             case BCParser.PLUSEQ: 
-                return memory.put(id, memory.getOrDefault(id,0.0) + value);
+                return memory.put(id, memory.get(id) + value);
             case BCParser.MINUSEQ: 
-                return memory.put(id, memory.getOrDefault(id,0.0) - value);
+                return memory.put(id, memory.get(id) - value);
             case BCParser.MULTEQ: 
-                return memory.put(id, memory.getOrDefault(id,0.0) * value);
+                return memory.put(id, memory.get(id) * value);
             case BCParser.DIVEQ: 
-                return memory.put(id, memory.getOrDefault(id,0.0) / value);        
+                return memory.put(id, memory.get(id) / value);        
             case BCParser.POWEQ: 
-                return memory.put(id, Math.pow(memory.getOrDefault(id,0.0), value));
+                return memory.put(id, Math.pow(memory.get(id), value));
             default: throw new RuntimeException("Bad Assignment"); 
         }
     }

@@ -112,7 +112,7 @@ equation:
 ;
 
 print:
-    '"'ID'"'  (',' print)? //{System.out.print($ID.text); }
+    STRING  (',' print)? //{System.out.print($ID.text); }
     | expr  (',' print)? //{System.out.print($expr.val); }
 ;
 
@@ -174,6 +174,7 @@ CBRACE: '}';
 SEMIC: ';';
 
 
+
 //NEWLINE:'\r'? '\n';
 COMMENT: '/*' .*? '*/';
 INLINE_COMMENT: '#' .*? '\n';
@@ -181,3 +182,6 @@ ID: [_A-Za-z]+;
 DOUBLE: ([0-9]*[.])?[0-9]+;
 WS : [ \t\n\r]+ -> skip ;
 NEGATIVE_SQRT: SQRT'(''-'[0-9]+')';
+
+
+STRING : '"' (~["])* '"';

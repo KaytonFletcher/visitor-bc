@@ -1,0 +1,58 @@
+z=0
+while(z<6){
+    print "z val: ", z++
+
+    if(z==3){
+        break
+    } else
+    continue
+
+    /* should not run */
+    y++
+}
+
+# y is still zero
+y
+
+
+define fib(n) {
+    if(n<=2) {
+    return 1
+    }
+    return fib(n-1) + fib(n-2)
+}
+
+define loop(x, y) {
+    for(i=0; i<3; i++)
+    {   
+        z += (x*y)
+    }
+
+    return z
+}
+
+# returns 12th fibonacci number, since loop(2,2) returns 12
+fib(loop(2,2))
+
+/* this z is not used in function, as function has 
+    its own scope that overrides global vars */
+z = 4
+
+define yeet() {
+    for(i=0; i < 5; i++){
+        z += 2
+        if(z < 8){
+            continue
+        }
+        # when z is 8 -> 7,
+        # when z is 9 -> 8
+        z--
+    }
+}
+
+# function returns zero by default
+l = yeet()
+print "function output: ", l
+
+# afterwards z is still 4 in global scope
+z

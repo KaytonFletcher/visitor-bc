@@ -29,6 +29,7 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
             System.out.print(this.visit(ctx.expr()));
         } else {
             String str = ctx.STRING().getText();
+
             str = str.substring(1, str.length() - 1);
             str = str.replaceAll("\\\\n", "\n");
 
@@ -36,14 +37,15 @@ public class EvalVisitor extends BCBaseVisitor<Double> {
         }
 
         if(ctx.print() != null ){ this.visit(ctx.print());}
-        return Double.NaN;
+
+        return 0.0;
     }
 
     @Override
     public Double visitPrintCheck(BCParser.PrintCheckContext ctx) {
         this.visit(ctx.print());
         System.out.println();
-        return Double.NaN;
+        return 0.0;
     }
 
     /**** ATOM EXPRESSIONS ****/

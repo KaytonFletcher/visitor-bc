@@ -183,5 +183,4 @@ DOUBLE: ([0-9]*[.])?[0-9]+;
 WS : [ \t\n\r]+ -> skip ;
 NEGATIVE_SQRT: SQRT'(''-'[0-9]+')';
 
-
-STRING : '"' (~["])* '"';
+STRING :  '"' (~["])* '"';
